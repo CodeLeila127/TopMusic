@@ -1,48 +1,41 @@
-﻿using System;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using TopMusic.Models;
 using TopMusic.Services;
+using Microsoft.Maui.Controls;
 
 namespace TopMusic.PageModels
 {
-    [QueryProperty(nameof(ArtistaName), "Artista")]
-    public class ArtistPageModel : INotifyPropertyChanged
+    public class Top10PageModel : INotifyPropertyChanged
     {
-        private string _artistaName;
-        public string ArtistaName
+        public ObservableCollection<Artist> Artists { get; set; } = new ObservableCollection<Artist>();
+
+        public ICommand SelectArtistCommand { get; }
+
+        public Top10PageModel()
         {
-            get => _artistaName;
-            set
-            {
-                if (_artistaName != value)
-                {
-                    _artistaName = value;
-                    OnPropertyChanged(nameof(ArtistaName));
-                    // No se puede poner async en setter, llamamos método async aparte
-                    LoadArtistDetails();
-                }
-            }
+            LoadArtists();
+            SelectArtistCommand = new Command<Artist>(async (artist) => await NavigateToArtistPage(artist));
         }
 
-        private Artist _artist;
-        public Artist Artist
-        {
-            get => _artist;
-            set
-            {
-                _artist = value;
-                OnPropertyChanged(nameof(Artist));
-            }
-        }
-
-        private async void LoadArtistDetails()
+        private async void LoadArtists()
         {
             var dataService = new DataService();
             var artists = await dataService.GetArtists();
 
-            Artist = artists.FirstOrDefault(a => a.Name == ArtistaName);
+            foreach (var artist in artists)
+                Artists.Add(artist);
+        }
+
+        private async Task NavigateToArtistPage(Artist artist)
+        {
+            if (artist != null)
+            {
+                // Navegación por QueryProperty (pasamos el nombre del artista)
+                await Shell.Current.GoToAsync($"{nameof(ArtistPage)}?Artista={artist.Name}");
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

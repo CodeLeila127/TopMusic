@@ -23,7 +23,7 @@
             <CollectionView
                 x:Name="ArtistsCollection"
                 ItemsSource="{Binding Artists}"
-                SelectedItem="{Binding SelectedArtista}"
+                SelectionChanged="CollectionView_SelectionChanged"
                 SelectionMode="Single">
 
                 <CollectionView.ItemTemplate>

@@ -1,59 +1,82 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using TopMusic.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using TopMusic.Models;
 using TopMusic.Services;
+using System.Linq;
 
 namespace TopMusic.PageModels
 {
-    public class Top10PageModel : INotifyPropertyChanged
+    [QueryProperty(nameof(ArtistaName), "Artista")]
+    public class ArtistPageModel : INotifyPropertyChanged
     {
-        public ObservableCollection<Artist> Artists { get; set; } = new ObservableCollection<Artist>();
-
-        private Artist _selectedArtist;
-        public Artist SelectedArtist
+        private string _artistaName;
+        public string ArtistaName
         {
-            get => _selectedArtist;
+            get => _artistaName;
             set
             {
-                if (_selectedArtist != value)
+                if (_artistaName != value)
                 {
-                    _selectedArtist = value;
-                    OnPropertyChanged(nameof(SelectedArtist));
+                    _artistaName = value;
+                    OnPropertyChanged(nameof(ArtistaName));
+                    _ = LoadArtistAsync();
+                }
+            }
+        }
 
-                    if (_selectedArtist != null)
-                    {
-                        // Navegación cuando cambia la selección
-                        Shell.Current.GoToAsync(nameof(ArtistPage), new Dictionary<string, object>
-                    {
-                        { "Artista", _selectedArtist }
-                    });
+        private Artist _artist;
+        public Artist Artist
+        {
+            get => _artist;
+            set
+            {
+                _artist = value;
+                OnPropertyChanged(nameof(Artist));
+            }
+        }
 
-                        // Limpia la selección para poder volver a seleccionar el mismo artista después
-                        SelectedArtist = null;
+        public ObservableCollection<Song> Songs { get; set; } = new ObservableCollection<Song>();
+
+        private Song _selectedSong;
+        public Song SelectedSong
+        {
+            get => _selectedSong;
+            set
+            {
+                if (_selectedSong != value)
+                {
+                    _selectedSong = value;
+                    OnPropertyChanged(nameof(SelectedSong));
+
+                    if (_selectedSong != null)
+                    {
+                        Shell.Current.GoToAsync(nameof(SongPage), new Dictionary<string, object>
+                        {
+                            { "Cancion", _selectedSong }
+                        });
+
+                        SelectedSong = null;
                     }
                 }
             }
         }
 
-        public Top10PageModel()
-        {
-            // No se puede usar await en el constructor, así que iniciamos la tarea de forma no bloqueante.
-            LoadArtists();
-        }
-
-        private async void LoadArtists()
+        private async Task LoadArtistAsync()
         {
             var dataService = new DataService();
             var artists = await dataService.GetArtists();
 
-            foreach (var artist in artists)
-                Artists.Add(artist);
+            Artist = artists.FirstOrDefault(a => a.Name == ArtistaName);
+
+            if (Artist != null && Artist.Songs != null)
+            {
+                Songs.Clear();
+                foreach (var song in Artist.Songs.Take(5))
+                {
+                    Songs.Add(song);
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

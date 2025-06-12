@@ -9,56 +9,41 @@
         <vm:ArtistPageModel />
     </ContentPage.BindingContext>
 
-    <ContentPage.Content>
-        <StackLayout Padding="10">
-            <!--  Nombre del Artista  -->
-            <Label
-                Margin="0,20,0,10"
-                FontSize="32"
-                HorizontalOptions="Center"
-                Text="{Binding Artist.Name}" />
+    <StackLayout Padding="10">
 
-            <!--  Imagen del Artista  -->
-            <Image
-                Aspect="AspectFill"
-                HeightRequest="200"
-                HorizontalOptions="Center"
-                Source="{Binding Artist.ArtistImg}" />
+        <!--  Nombre del Artista  -->
+        <Label
+            FontSize="32"
+            HorizontalOptions="Center"
+            Text="{Binding Artist.Name}" />
 
-            <Label
-                Margin="0,20,0,10"
-                FontSize="24"
-                Text="Canciones:" />
+        <!--  Listado de canciones  -->
+        <CollectionView
+            ItemsSource="{Binding Songs}"
+            SelectedItem="{Binding SelectedSong, Mode=TwoWay}"
+            SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame
+                        Margin="5"
+                        Padding="10"
+                        BorderColor="Gray"
+                        CornerRadius="10">
+                        <StackLayout Orientation="Horizontal">
+                            <Image
+                                HeightRequest="80"
+                                Source="{Binding SongImg}"
+                                WidthRequest="80" />
+                            <Label
+                                Margin="10,0,0,0"
+                                FontSize="20"
+                                Text="{Binding Name}"
+                                VerticalOptions="Center" />
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
-            <!--  Lista de Canciones  -->
-            <CollectionView ItemsSource="{Binding Songs}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame
-                            Margin="0,5"
-                            Padding="10"
-                            BorderColor="Gray"
-                            CornerRadius="10">
-                            <Grid ColumnDefinitions="Auto, *" VerticalOptions="Center">
-                                <Image
-                                    Grid.Column="0"
-                                    Aspect="AspectFill"
-                                    HeightRequest="80"
-                                    Source="{Binding SongImg}"
-                                    WidthRequest="80" />
-
-                                <Label
-                                    Grid.Column="1"
-                                    Padding="10,0"
-                                    FontSize="20"
-                                    Text="{Binding Name}"
-                                    VerticalOptions="Center" />
-                            </Grid>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </StackLayout>
-    </ContentPage.Content>
+    </StackLayout>
 </ContentPage>
-
