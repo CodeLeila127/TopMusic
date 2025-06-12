@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TopMusic.Pages.ArtistPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:TopMusic.PageModels">
+
+    <ContentPage.BindingContext>
+        <vm:ArtistPageModel />
+    </ContentPage.BindingContext>
+
+    <StackLayout Padding="10">
+
+        <!--  Nombre del Artista  -->
+        <Label
+            FontSize="32"
+            HorizontalOptions="Center"
+            Text="{Binding Artist.Name}" />
+
+        <!--  Listado de canciones  -->
+        <CollectionView
+            ItemsSource="{Binding Songs}"
+            SelectedItem="{Binding SelectedSong, Mode=TwoWay}"
+            SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame
+                        Margin="5"
+                        Padding="10"
+                        BorderColor="Gray"
+                        CornerRadius="10">
+                        <StackLayout Orientation="Horizontal">
+                            <Image
+                                HeightRequest="80"
+                                Source="{Binding SongImg}"
+                                WidthRequest="80" />
+                            <Label
+                                Margin="10,0,0,0"
+                                FontSize="20"
+                                Text="{Binding Name}"
+                                VerticalOptions="Center" />
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </StackLayout>
+</ContentPage>
