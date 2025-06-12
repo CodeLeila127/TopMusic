@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:TopMusic.PageModels">
 
-    <!--  Vinculamos el ViewModel  -->
+    <!--  ViewModel  -->
     <ContentPage.BindingContext>
         <vm:Top10PageModel />
     </ContentPage.BindingContext>
@@ -12,7 +12,7 @@
     <ContentPage.Content>
         <StackLayout Padding="10">
 
-            <!--  Título de la página  -->
+            <!--  Título  -->
             <Label
                 Margin="0,20,0,10"
                 FontSize="32"
@@ -20,11 +20,7 @@
                 Text="Top 10 de Artistas" />
 
             <!--  Lista de artistas  -->
-            <CollectionView
-                x:Name="ArtistsCollection"
-                ItemsSource="{Binding Artists}"
-                SelectionChanged="CollectionView_SelectionChanged"
-                SelectionMode="Single">
+            <CollectionView ItemsSource="{Binding Artists}" SelectionMode="None">
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -33,7 +29,13 @@
                             Padding="10"
                             BorderColor="Gray"
                             CornerRadius="10"
-                            HasShadow="True">
+                            HasShadow="True"
+                            InputTransparent="False">
+
+                            <!--  Hacer toda la tarjeta clickeable  -->
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:Top10PageModel}}, Path=SelectArtistCommand}" CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
 
                             <Grid ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center">
 
@@ -47,7 +49,7 @@
                                     VerticalOptions="Center"
                                     WidthRequest="80" />
 
-                                <!--  Información del artista  -->
+                                <!--  Info del artista  -->
                                 <StackLayout Grid.Column="1" Padding="10,0">
                                     <Label
                                         FontAttributes="Bold"

@@ -33,8 +33,8 @@ namespace TopMusic.PageModels
         {
             if (artist != null)
             {
-                // Navegación por QueryProperty (pasamos el nombre del artista)
-                await Shell.Current.GoToAsync($"{nameof(ArtistPage)}?Artista={artist.Name}");
+                // Navegación segura (encode)
+                await Shell.Current.GoToAsync($"{nameof(ArtistPage)}?Artista={Uri.EscapeDataString(artist.Name)}");
             }
         }
 
