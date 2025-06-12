@@ -8,7 +8,6 @@ namespace TopMusic.Models
 {
     public class Song
     {
-        public int IDSong { get; set; }
         public string Name { get; set; }
         public string SongImg { get; set; }
         public int Year { get; set; }

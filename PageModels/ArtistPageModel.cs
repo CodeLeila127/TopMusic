@@ -72,7 +72,7 @@ namespace TopMusic.PageModels
             if (Artist != null && Artist.Songs != null)
             {
                 Songs.Clear();
-                foreach (var song in Artist.Songs.Take(5))
+                foreach (var song in Artist.Songs)
                 {
                     Songs.Add(song);
                 }
